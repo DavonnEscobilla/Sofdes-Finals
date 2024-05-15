@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
+import { useSelector } from 'react-redux';
 
 function ImageInference() {
   const [file, setFile] = useState(null);
@@ -8,6 +9,7 @@ function ImageInference() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const canvasRef = useRef(null);
+  const theme = useSelector((state) => state.theme.theme);
 
   const handleFileChange = (event) => {
     const selectedFile = event.target.files[0];
@@ -92,34 +94,34 @@ function ImageInference() {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '20px', marginBottom: '50px', color: 'white' }}>
-      <h1 style={{ fontSize: '2em', marginBottom: '20px' }}>Upload Image for Inference</h1>
+    <div className={`min-h-screen max-w-2xl mx-auto flex flex-col justify-center items-center gap-6 p-3 ${theme === 'dark' ? 'bg-gray-900 text-white' : 'bg-white text-gray-900'}`}>
+      <h1 className='text-3xl font-semibold'>Upload Image for Inference</h1>
       <input 
         type="file" 
         accept="image/*" 
         onChange={handleFileChange} 
-        style={{ marginBottom: '20px', padding: '10px', backgroundColor: '#1f2937', color: 'white', border: '1px solid #374151', borderRadius: '5px' }} 
+        className={`mb-4 p-2 ${theme === 'dark' ? 'bg-gray-800 text-white border border-gray-600' : 'bg-gray-200 text-gray-900 border border-gray-400'} rounded cursor-pointer`}
       />
       {preview && (
-        <div style={{ marginTop: '20px', textAlign: 'center' }}>
-          <h2 style={{ marginBottom: '10px' }}>Image Preview</h2>
-          <div style={{ position: 'relative' }}>
-            <canvas ref={canvasRef} style={{ border: '1px solid #ddd', marginTop: '10px' }}></canvas>
+        <div className='text-center'>
+          <h2 className='mb-2 text-xl'>Image Preview</h2>
+          <div className='relative'>
+            <canvas ref={canvasRef} className={`border ${theme === 'dark' ? 'border-gray-600' : 'border-gray-400'} rounded`}></canvas>
           </div>
         </div>
       )}
       <button 
         onClick={handleInference} 
         disabled={loading} 
-        style={{ marginTop: '20px', padding: '10px 20px', fontSize: '16px', cursor: 'pointer', backgroundColor: '#3b82f6', color: 'white', border: 'none', borderRadius: '5px' }}
+        className='mt-4 px-4 py-2 text-lg font-semibold text-white bg-blue-500 rounded hover:bg-blue-600 disabled:opacity-50'
       >
         {loading ? 'Inferring...' : 'Infer Image'}
       </button>
-      {error && <p style={{ color: 'red', marginTop: '10px' }}>{error}</p>}
+      {error && <p className='mt-4 text-red-500'>{error}</p>}
       {result && (
-        <div style={{ marginTop: '20px', textAlign: 'left', width: '80%', maxWidth: '600px', wordWrap: 'break-word', backgroundColor: '#1f2937', padding: '20px', borderRadius: '10px' }}>
-          <h2 style={{ marginBottom: '10px' }}>Inference Result</h2>
-          <pre style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word', color: 'white' }}>{JSON.stringify(result, null, 2)}</pre>
+        <div className={`mt-6 p-4 ${theme === 'dark' ? 'bg-gray-800 text-white' : 'bg-gray-200 text-gray-900'} rounded`}>
+          <h2 className='mb-2 text-xl'>Inference Result</h2>
+          <pre className='whitespace-pre-wrap break-words'>{JSON.stringify(result, null, 2)}</pre>
         </div>
       )}
     </div>
