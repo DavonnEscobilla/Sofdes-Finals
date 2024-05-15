@@ -80,34 +80,46 @@ function ImageInference() {
 
       if (data.predictions) {
         data.predictions.forEach(prediction => {
-          const { x, y, width, height } = prediction.bbox;
-          ctx.strokeStyle = 'red';
-          ctx.lineWidth = 2;
-          ctx.strokeRect(x, y, width, height);
+          if (prediction.bbox) {
+            const { x, y, width, height } = prediction.bbox;
+            ctx.strokeStyle = 'red';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(x, y, width, height);
+          }
         });
       }
     };
   };
 
   return (
-    <div>
-      <h1>Upload Image for Inference</h1>
-      <input type="file" accept="image/*" onChange={handleFileChange} />
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '20px', marginBottom: '50px', color: 'white' }}>
+      <h1 style={{ fontSize: '2em', marginBottom: '20px' }}>Upload Image for Inference</h1>
+      <input 
+        type="file" 
+        accept="image/*" 
+        onChange={handleFileChange} 
+        style={{ marginBottom: '20px', padding: '10px', backgroundColor: '#1f2937', color: 'white', border: '1px solid #374151', borderRadius: '5px' }} 
+      />
       {preview && (
-        <div>
-          <h2>Image Preview</h2>
-          <img src={preview} alt="Selected" style={{ display: 'none' }} />
-          <canvas ref={canvasRef}></canvas>
+        <div style={{ marginTop: '20px', textAlign: 'center' }}>
+          <h2 style={{ marginBottom: '10px' }}>Image Preview</h2>
+          <div style={{ position: 'relative' }}>
+            <canvas ref={canvasRef} style={{ border: '1px solid #ddd', marginTop: '10px' }}></canvas>
+          </div>
         </div>
       )}
-      <button onClick={handleInference} disabled={loading}>
+      <button 
+        onClick={handleInference} 
+        disabled={loading} 
+        style={{ marginTop: '20px', padding: '10px 20px', fontSize: '16px', cursor: 'pointer', backgroundColor: '#3b82f6', color: 'white', border: 'none', borderRadius: '5px' }}
+      >
         {loading ? 'Inferring...' : 'Infer Image'}
       </button>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {error && <p style={{ color: 'red', marginTop: '10px' }}>{error}</p>}
       {result && (
-        <div>
-          <h2>Inference Result</h2>
-          <pre>{JSON.stringify(result, null, 2)}</pre>
+        <div style={{ marginTop: '20px', textAlign: 'left', width: '80%', maxWidth: '600px', wordWrap: 'break-word', backgroundColor: '#1f2937', padding: '20px', borderRadius: '10px' }}>
+          <h2 style={{ marginBottom: '10px' }}>Inference Result</h2>
+          <pre style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word', color: 'white' }}>{JSON.stringify(result, null, 2)}</pre>
         </div>
       )}
     </div>
